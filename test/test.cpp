@@ -148,6 +148,30 @@ TEST(Forward_List, can_shift_list_correct)
     list.shift_k_elem(1);
     EXPECT_EQ(3, list.pop_front());
 }
+TEST(Forward_List, can_shift_list_with_large_k_fast)
+{
+    Forward_List<int> list;
+    list.push_Back(1);
+    list.push_Back(2);
+    list.push_Back(3);
+    list.shift_k_elem(3000001);
+    EXPECT_EQ(3, list.pop_front());
+}
+TEST(Forward_List, can_shift_list_with_divisible_size)
+{
+    Forward_List<int> list;
+    list.push_Back(1);
+    list.push_Back(2);
+    list.push_Back(3);
+    list.shift_k_elem(300);
+    EXPECT_EQ(1, list.pop_front());
+}
+TEST(Forward_List, can_shift_BIG_list_fast)
+{
+    Forward_List<int> list(1000, 1);
+    list.shift_k_elem(500);
+    EXPECT_EQ(501, list.pop_front());
+}
 TEST(Forward_List, can_find_existing_element)
 {
     Forward_List<int> list;

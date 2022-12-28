@@ -20,14 +20,9 @@ struct Node {
 template <class T>
 class Forward_List
 {
-    /*struct Node {
-        T element;
-        Node * next = nullptr;
-        Node(T, next = nullptr);
-    };*/
-    Node<T> * first;
-
 private:
+    Node<T> * first;
+    
     Forward_List & shift_1_elem()
     {
         Node<T> * tmp = first;
@@ -57,9 +52,9 @@ public:
         first = new Node<T>(value);
         if(n ==0 )return;
         Node<T> * tmp = first;
-        for(int i = 1; i < n; i++)
+        for(int i = value+1; i <= n; i++)
         {
-            tmp->next = new Node<T>(value);
+            tmp->next = new Node<T>(i);
             tmp = tmp->next;
         }
     }
@@ -95,7 +90,7 @@ public:
         clear();
     }
     
-    Forward_List(Forward_List & list)
+    /*Forward_List(Forward_List & list)
     {
         first = nullptr;
         Node<T> * tmp = list.first;
@@ -104,7 +99,14 @@ public:
             push_Back(tmp->element);
             tmp = tmp->next;
         }
+    }*/
+    
+    Forward_List(Forward_List && list)
+    {
+        this->first = list.first;
+        list.first = nullptr;
     }
+    
     
     Forward_List(const Forward_List & list)
     {
@@ -174,6 +176,8 @@ public:
         Node<T> * listPtr = list.first;
         if(!listPtr)
             return * this;
+        this->clear();
+        
         first = new Node<T> (listPtr->element);
         listPtr = listPtr->next;
         Node<T> * tmp = first;
@@ -231,14 +235,30 @@ public:
             throw "K can not be negative";
         }
         
-        if(k == 0)
+        int n = this->size();
+        if(k == 0 || k % n == 0)
         {
             return * this;
         }
-        while(k--)
+        
+        k = k % n;
+        int t = n - k;
+        Node<T> * tmp = first;
+        Node<T> * prev = nullptr;
+        while(t--)
         {
-            shift_1_elem();
+            prev = tmp;
+            tmp = tmp->next;
         }
+        Node<T> * last = tmp;
+        while(last->next)
+        {
+            last = last->next;
+        }
+        last->next = first;
+        prev->next = nullptr;
+        first = tmp;
+        
         return * this;
     }
 };
